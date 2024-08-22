@@ -7,7 +7,7 @@ from global_used_paths import latex_template_path,txt_file_dir,pdf_out_path_coll
 
 # 需要保证段落刚好是 \n\n，这个很好保证吧！
 
-def save_files(title_info_dict,txt_file_path):
+def save_files(title_info_dict,txt_file_path,tex_filename):
     filename=title_info_dict['filename']
     title=title_info_dict['<Your-Title>']
     author=title_info_dict['<Your-Author>']
@@ -16,11 +16,13 @@ def save_files(title_info_dict,txt_file_path):
         os.makedirs(f"./records/{title}-{author}-{date}")
     # 保存txt文件（复制）
     shutil.copyfile(txt_file_path,f"./records/{title}-{author}-{date}/{title}-{author}-{date}.txt")
+    # copy pdf 文件
+    shutil.copy2(f"{tex_filename}.pdf","D:/tempUseDir/Alldowns")
     # 保存tex与pdf文件（剪切）
-    os.rename(f"output.tex",f"./records/{title}-{author}-{date}/{title}-{author}-{date}.tex")
-    os.rename(f"output.pdf",f"./records/{title}-{author}-{date}/{title}-{author}-{date}.pdf")
+    shutil.move(f"{tex_filename}.tex",f"./records/{title}-{author}-{date}/{title}-{author}-{date}.tex")
+    shutil.move(f"{tex_filename}.pdf",f"./records/{title}-{author}-{date}/{title}-{author}-{date}.pdf")
     # 删掉剩下的垃圾
-    os.system(f"cd \"{os.getcwd()}\" && del output*")
+    os.system(f"cd \"{os.getcwd()}\" && del {tex_filename}*")
 
     return f"./records/{title}-{author}-{date}/{title}-{author}-{date}.pdf"
     
@@ -46,27 +48,20 @@ def get_final_file_str(info_dict:dict,template_path:str,poem_or_essay):
     with open(template_path,'r',encoding='utf-8') as f:
         template_line_s=f.read()
     for key,value in info_dict.items():
-        template_line_s=template_line_s.replace(key,value)
+        if key.startswith('<Your'):
+            template_line_s=template_line_s.replace(key,value)
     # 最终的文本体现
     final_file_str=template_line_s
     if poem_or_essay == 'essay':
         final_file_str=final_file_str.replace(r"\setlength\parindent{0pt}",'')
     return final_file_str
-    
-def get_para_list_from_one_file(file_path:str):
-    # 读取完整文件内容，存入字符串lines_s
-    with open(file_path,'r',encoding='utf-8') as f:
-        lines_s=f.read()
-    # 设定1：段落必定由两个及以上\n所分割
-    para_list=lines_s.split("\n\n")
-    return para_list
 
 def get_para_type(para:str):
     # 章节段落单独标记为：crt
     return 'crt' if para.startswith("crtcrtcrt") else 'normal'
 
-def get_latex_file_save_compile(title_info_dict,txt_file_path,template_path,txt_filename):
-    para_list = get_para_list_from_one_file(txt_file_path)
+def get_latex_file_save_compile(title_info_dict,template_path):
+    para_list = title_info_dict['para_list']
     for para_idx,para in enumerate(para_list):
         para_type = get_para_type(para)
         if para_type == 'crt':
@@ -76,21 +71,22 @@ def get_latex_file_save_compile(title_info_dict,txt_file_path,template_path,txt_
     content_str=get_format_tex_content_by_poem_or_essay(paras_s,title_info_dict["poem_or_essay"])
     title_info_dict['<Your-Content>']=content_str
     final_file_str=get_final_file_str(title_info_dict,template_path,title_info_dict["poem_or_essay"])
-    # 生成编译用txt文件
-    with open(f"output.tex",'w',encoding='utf-8') as f:
+    # 生成编译用tex文件
+    tex_filename=title_info_dict['filename'].replace(".txt","")
+    with open(f"{tex_filename}.tex",'w',encoding='utf-8') as f:
         f.write(final_file_str)
     # 编译该文件
-    os.system(f"xelatex -interaction=nonstopmode output.tex")
+    os.system(f"xelatex -interaction=nonstopmode {tex_filename}.tex")
     # 保存应该保存的文件
-    pdf_out_path=save_files(title_info_dict,txt_file_path)
+    pdf_out_path=save_files(title_info_dict,title_info_dict["filepath"],tex_filename)
     return pdf_out_path
 
-def main():
-    title_info_dict = get_title_infos()
-    txt_filename = title_info_dict['filename']
-    txt_file_path = txt_file_dir + os.sep + txt_filename + '.txt'
-    pdf_out_path = get_latex_file_save_compile(title_info_dict,txt_file_path,latex_template_path,txt_filename)
+def main(txt_file_path):
+    title_info_dict = get_title_infos(txt_file_path)
+    txt_file_path = title_info_dict['filepath']
+    pdf_out_path = get_latex_file_save_compile(title_info_dict,latex_template_path)
     pdf_out_path_collect_list.append(pdf_out_path)
 
 if __name__ == '__main__':
-    main()
+    txt_file_path="D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\text_files\一叶知秋.txt"
+    main(txt_file_path)

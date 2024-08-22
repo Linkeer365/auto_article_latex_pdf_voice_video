@@ -1,0 +1,3 @@
+file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\一叶知秋-nyanya-2022\pic_mp3\001.mp4'
+file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\一叶知秋-nyanya-2022\pic_mp3\002.mp4'
+file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\一叶知秋-nyanya-2022\pic_mp3\003.mp4'

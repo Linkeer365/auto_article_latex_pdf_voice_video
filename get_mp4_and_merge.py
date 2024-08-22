@@ -26,7 +26,9 @@ def main():
             a2v(mp3_path,pic_path,mp4_path)
         final_out_path = pdf_out_path.replace(".pdf",".mp4")
         concat_comm=f"ffmpeg -f concat -safe 0 -i {mylist_path} -c copy \"{final_out_path}\" -y"
-        os.system(concat_comm)  
+        os.system(concat_comm) 
+        # move mp4 文件
+        shutil.move(f"{final_out_path}","D:/tempUseDir/Alldowns"+os.sep+os.path.basename(final_out_path))
 
 
 if __name__ == '__main__':
