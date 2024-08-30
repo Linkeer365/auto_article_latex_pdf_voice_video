@@ -1,12 +1,18 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{ctex}
+\usepackage{url}
 
-\title{<Your-Title>\footnote{Click to View:\url{<Your-Url>}}}
+% support Chinese Chars %
+\newfontfamily\urlfontfamily{FandolSong-Regular}
+\def\UrlFont{\urlfontfamily}
+
+\title{<Your-Title>}
 \author{<Your-Author>}
 \date{<Your-Date>}
 
 \maketitle
+\url{<Your-Url>}
 \newpage
 
 \begin{document}

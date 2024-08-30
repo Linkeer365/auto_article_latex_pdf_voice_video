@@ -76,7 +76,8 @@ def get_latex_file_save_compile(title_info_dict,template_path):
     with open(f"{tex_filename}.tex",'w',encoding='utf-8') as f:
         f.write(final_file_str)
     # 编译该文件
-    os.system(f"xelatex -interaction=nonstopmode {tex_filename}.tex")
+    comm = f"xelatex -interaction=nonstopmode {tex_filename}.tex"
+    os.system(comm)
     # 保存应该保存的文件
     pdf_out_path=save_files(title_info_dict,title_info_dict["filepath"],tex_filename)
     return pdf_out_path
@@ -88,5 +89,5 @@ def main(txt_file_path):
     pdf_out_path_collect_list.append(pdf_out_path)
 
 if __name__ == '__main__':
-    txt_file_path="D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\text_files\一叶知秋.txt"
+    txt_file_path="D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\text_files\samplesample.txt"
     main(txt_file_path)
