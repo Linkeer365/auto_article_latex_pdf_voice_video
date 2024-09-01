@@ -21,7 +21,7 @@ def main():
         pic_list=glob.glob(os.path.join(pdf_pic_out_dir, "*.jpg"))
         for mp3_path,pic_path in zip(mp3_list,pic_list):
             mp4_path=os.path.abspath(mp3_path.replace(".mp3",".mp4"))
-            with open(mylist_path,'a',encoding='gbk') as f:
+            with open(mylist_path,'a',encoding='gbk', errors='ignore') as f:
                 f.write(f"file \'{mp4_path}\'\n")
             a2v(mp3_path,pic_path,mp4_path)
         final_out_path = pdf_out_path.replace(".pdf",".mp4")

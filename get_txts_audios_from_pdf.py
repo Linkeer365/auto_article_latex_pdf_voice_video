@@ -1,6 +1,37 @@
+import aiohttp
 import pdfplumber
 import os
 from global_used_paths import pdf_out_path_collect_list
+
+# 暂时更换为 SAPI
+def get_audio_from_SAPI(pdf_txt_out_path,pdf_mp3_out_path):
+    with open(pdf_txt_out_path,'r',encoding="utf-8") as f:
+        texts_s=f.read()
+    import comtypes.client
+    speak = comtypes.client.CreateObject("SAPI.SpVoice")
+    filestream = comtypes.client.CreateObject("SAPI.spFileStream")
+    filestream.open(f"{pdf_mp3_out_path}", 3, False)
+    speak.AudioOutputStream = filestream 
+    speak.Speak(f"{texts_s}")
+    filestream.close()
+
+# 暂时更换为 ChatTTS
+def get_audio_from_chatTts(pdf_txt_out_path,pdf_mp3_out_path):
+    import ChatTTS
+    import torch
+    import torchaudio
+
+    chat = ChatTTS.Chat()
+    chat.load(compile=False) # Set to True for better performance
+    
+    with open(pdf_txt_out_path,'r',encoding="utf-8") as f:
+        texts_s=f.read()
+
+    texts = [texts_s]
+
+    wavs = chat.infer(texts)
+
+    torchaudio.save(f"{pdf_mp3_out_path}.wav", torch.from_numpy(wavs[0]), 24000)
 
 #提取全部文字，并保存
 def extract_text_allpage (pdf_path,pdf_txt_out_dir):
@@ -17,7 +48,9 @@ def extract_text_allpage (pdf_path,pdf_txt_out_dir):
         with open(pdf_txt_out_path,'w',encoding="utf-8") as f:
             f.write(page_content)
         audio_comm=f"edge-tts --voice zh-CN-YunyangNeural --rate=-20% -f \"{pdf_txt_out_path}\" --write-media \"{pdf_mp3_out_path}\""
-        os.system(audio_comm)
+        # os.system(audio_comm)
+        # get_audio_from_chatTts(pdf_txt_out_path,pdf_mp3_out_path)
+        get_audio_from_SAPI(pdf_txt_out_path,pdf_mp3_out_path)
 
 def main():
     for pdf_out_path_idx,pdf_out_path in enumerate(pdf_out_path_collect_list):

@@ -2,7 +2,7 @@ import re
 import os
 import shutil
 import sys
-from get_title_infos import get_title_infos
+from get_title_infos import get_title_infos,store_to_db
 from global_used_paths import latex_template_path,txt_file_dir,pdf_out_path_collect_list
 
 # 需要保证段落刚好是 \n\n，这个很好保证吧！
@@ -72,7 +72,8 @@ def get_latex_file_save_compile(title_info_dict,template_path):
     title_info_dict['<Your-Content>']=content_str
     final_file_str=get_final_file_str(title_info_dict,template_path,title_info_dict["poem_or_essay"])
     # 生成编译用tex文件
-    tex_filename=title_info_dict['filename'].replace(".txt","")
+    # tex_filename=title_info_dict['filename'].replace(".txt","")
+    tex_filename=f"{title_info_dict['<Your-Title>']}-{title_info_dict['<Your-Author>']}-{title_info_dict['<Your-Date>'].replace("-","")}"
     with open(f"{tex_filename}.tex",'w',encoding='utf-8') as f:
         f.write(final_file_str)
     # 编译该文件
@@ -80,13 +81,25 @@ def get_latex_file_save_compile(title_info_dict,template_path):
     os.system(comm)
     # 保存应该保存的文件
     pdf_out_path=save_files(title_info_dict,title_info_dict["filepath"],tex_filename)
+    # 写入数据库
+    store_to_db(title_info_dict['<Your-Title>'],
+                title_info_dict['<Your-Author>'],
+                title_info_dict['<Your-Date>'],
+                title_info_dict['poem_or_essay'],
+                title_info_dict['<Your-Url>'],
+                title_info_dict['raw_content'],
+                title_info_dict['filepath']
+                )
     return pdf_out_path
 
 def main(txt_file_path):
     title_info_dict = get_title_infos(txt_file_path)
-    txt_file_path = title_info_dict['filepath']
-    pdf_out_path = get_latex_file_save_compile(title_info_dict,latex_template_path)
-    pdf_out_path_collect_list.append(pdf_out_path)
+    if title_info_dict != {}:
+        txt_file_path = title_info_dict['filepath']
+        pdf_out_path = get_latex_file_save_compile(title_info_dict,latex_template_path)
+        pdf_out_path_collect_list.append(pdf_out_path)
+    else:
+        return -1
 
 if __name__ == '__main__':
     txt_file_path="D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\text_files\samplesample.txt"

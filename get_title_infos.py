@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 import psycopg2
+from psycopg2.errors import UniqueViolation
 import uuid
 from datetime import datetime
 
@@ -31,6 +32,35 @@ def store_to_db(title, author, date, pe_type, link, content,txt_path):
     conn.commit()
     cursor.close()
     conn.close()
+
+def retrieve_from_db(title, author, date, pe_type):
+    # 数据库连接参数
+    db_config = {
+        'dbname': 'lsyhome',
+        'user': 'postgres',
+        'password': 'postgres',
+        'host': 'localhost',  # 根据实际情况修改
+        'port': '5432'        # 根据实际情况修改
+    }
+    # 连接到数据库
+    conn = psycopg2.connect(**db_config)
+    cursor = conn.cursor()
+    # 查询数据
+    retrieve_query = """
+    SELECT * from article_infos WHERE 
+        article_title        = %s
+    AND article_author       = %s
+    AND article_publish_date = %s
+    AND article_pe_type      = %s
+    ;
+    """
+    cursor.execute(retrieve_query, (title, author, date, pe_type))
+    # 获取所有记录列表
+    results = cursor.fetchall()
+    if len(results)>=1:
+        return -1
+    else:
+        return 0
 
 def get_title_infos(txt_path):
     with open(txt_path,'r',encoding='utf-8') as f:
@@ -61,8 +91,9 @@ def get_title_infos(txt_path):
         'raw_content': content_s,
         'para_list': para_list
     }
-    # 写入本地数据库
-    store_to_db(title,author,date,pe_type,url,content_s,txt_path)
+    if retrieve_from_db(title,author,date,pe_type) == -1:
+        print(f"文章对象：{title}-{author}-{date}，已存在！")
+        title_infos = {}
     return title_infos
 
 def get_title_infos_by_input():
