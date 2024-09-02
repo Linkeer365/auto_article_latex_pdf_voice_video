@@ -1,7 +1,0 @@
-file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\【初祥】追随：后记——以及作者的忏悔录-sandman-20231219\pic_mp3\001.mp4'
-file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\【初祥】追随：后记——以及作者的忏悔录-sandman-20231219\pic_mp3\002.mp4'
-file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\【初祥】追随：后记——以及作者的忏悔录-sandman-20231219\pic_mp3\003.mp4'
-file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\【初祥】追随：后记——以及作者的忏悔录-sandman-20231219\pic_mp3\004.mp4'
-file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\【初祥】追随：后记——以及作者的忏悔录-sandman-20231219\pic_mp3\005.mp4'
-file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\【初祥】追随：后记——以及作者的忏悔录-sandman-20231219\pic_mp3\006.mp4'
-file 'D:\myFiles\forCoding\auto_article_latex_pdf_voice_video\records\【初祥】追随：后记——以及作者的忏悔录-sandman-20231219\pic_mp3\007.mp4'
