@@ -8,7 +8,9 @@ import glob
 
 def a2v(audio_file:str,img_file:str,video_file:str):
     not_divisible_by_two="-vf \"scale=2*trunc(iw/2):2*trunc(ih/2),setsar=1\""      
-    command_str=f"ffmpeg -loop 1 -i \"{img_file}\" -i \"{audio_file}\" {not_divisible_by_two} -c:v h264_qsv -tune stillimage -c:a aac -b:a 192k -shortest \"{video_file}\" -y"
+    # command_str=f"ffmpeg -loop 1 -i \"{img_file}\" -i \"{audio_file}\" {not_divisible_by_two} -c:v h264_qsv -tune stillimage -c:a aac -b:a 192k -shortest \"{video_file}\" -y"
+    # 使用 Nvidia 显卡进行加速会更快一点（平均每page大约21s左右）
+    command_str=f"ffmpeg -loop 1 -i \"{img_file}\" -i \"{audio_file}\" {not_divisible_by_two} -c:v h264_nvenc -b:v 10000k -c:a aac -b:a 192k -shortest \"{video_file}\" -y"
     print(command_str)
     os.system(command_str)
 
