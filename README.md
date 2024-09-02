@@ -16,6 +16,6 @@ auto_article_latex 和 simple_video_generate 结合起来，修改了大量冗�
 
 4. 将形如（音声文件001.mp3，图片文件001.jpg）的文件，通过ffmpeg合成为：`视频文件001.mp4`，命令如下：
 
-> ffmpeg -loop 1 -i <your-pic-file-path> -i <your-audio-file-path> -vf "scale=2*trunc(iw/2):2*trunc(ih/2),setsar=1" -c:v h264_nvenc -b:v 10000k -c:a aac -b:a 192k -shortest <your-video-file-path> -y
+> ffmpeg -loop 1 -i `<your-pic-file-path>` -i `<your-audio-file-path>` -vf "scale=2*trunc(iw/2):2*trunc(ih/2),setsar=1" -c:v h264_nvenc -b:v 10000k -c:a aac -b:a 192k -shortest `<your-video-file-path>` -y
 
 5. 把形如（`视频文件001.mp4`，`视频文件002.mp4`...）的文件通过ffmpeg进行merge，形成最终文件
